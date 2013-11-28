@@ -77,4 +77,59 @@ class OsmLaneRestriction extends CActiveRecord
     {
         return parent::model($className);
     }
+
+    /**
+     * (Scope)
+     * Filters requested OsmLaneRestriction models by type column
+     *
+     * @param  string $type  - refers to linking table @example RoadClosure
+     *
+     * @return CActiveRecord - Returns this model instance
+     */
+    public function type($type) {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('type = :type');
+        $criteria->params = array('type' => $type);
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    /**
+     * (Scope)
+     * Filters requested OsmLaneRestriction models by type_id column
+     *
+     * @param  string $typeId  - refers to type tables id
+     *
+     * @return CActiveRecord - Returns this model instance
+     */
+    public function typeId($typeId = null) {
+        if (is_null($typeId)) {
+            return $this;
+        }
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('type_id = :typeId');
+        $criteria->params = array('typeId' => $typeId);
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    /**
+     * (Scope)
+     * Allows bulk filtering of Lane Restrictions by an array of typeids
+     *
+     * @param  array $typeIds - array of ids @example array(1234,1235,1246)
+     *
+     * @return CActiveRecord  - Returns this model instance
+     */
+    public function typeIds(array $typeIds = null) {
+        if (is_null($typeIds)) {
+            return $this;
+        }
+        // var_dump($typeIds); die;
+        $criteria = new CDbCriteria;
+        $criteria->addInCondition('type_id', $typeIds);
+        // $criteria->addInCondition('type_id', array(123, 124));
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
 }
