@@ -35,7 +35,7 @@ class ApiUtils {
     public static function jsonError($app, $status, $message) {
         $response = $app->response();
         $response->header('Content-Type', 'application/json');
-        $app->halt($status, json_encode(array('message' => $message)));
+        $app->halt($status, json_encode(array('errors' => $message)));
     }
 
 }
