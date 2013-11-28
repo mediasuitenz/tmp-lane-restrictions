@@ -6,7 +6,7 @@ class LanerestrictionsController extends Controller {
      * /lanerestrictions
      * Returns all lanerestrictions for given type and type_id
      */
-    public function laneRestrictions($app) {
+    public function laneRestrictionsGET($app) {
 
         $app->get('/lanerestrictions/api/lanerestrictions', function () use ($app) {
 
@@ -49,11 +49,42 @@ class LanerestrictionsController extends Controller {
         return $app;
     }
 
+    /**
+     * /lanerestrictions
+     * Creates a new lane restriction
+     */
+    public function laneRestrictionsPOST($app) {
+
+        $app->post('/lanerestrictions/api/lanerestrictions', function () use ($app) {
+
+            $laneRestriction = new OsmLaneRestriction;
+
+            $body = json_decode($app->request()->getBody(), true);
+
+            $laneRestriction->attributes = $body;
+
+            if(false === $laneRestriction->save()) {
+                ApiUtils::jsonError(
+                    $app,
+                    400,
+                    $laneRestriction->getErrors()
+                );
+            }
+
+            $data = LaneRestrictionUtils::lanerestrictionArray($laneRestriction);
+
+            ApiUtils::jsonRender($app, $data);
+
+        });
+        return $app;
+    }
+
     public function actionIndex() {
 
         $app = ApiUtils::createApi();
 
-        $app = $this->laneRestrictions($app);
+        $app = $this->laneRestrictionsGET($app);
+        $app = $this->laneRestrictionsPOST($app);
 
         $app->run();
 
