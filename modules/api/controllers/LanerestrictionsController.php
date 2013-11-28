@@ -3,6 +3,29 @@
 class LanerestrictionsController extends Controller {
 
     /**
+     * /lanerestrictions/:id
+     * Returns all lanerestrictions for given type and type_id
+     */
+    public function laneRestriction($app) {
+
+        $app->get('/lanerestrictions/api/lanerestrictions/:id', function ($id) use ($app) {
+
+
+            $laneRestriction = OsmLaneRestriction::model()->findByPk($id);
+
+            if (empty($laneRestriction)) {
+                ApiUtils::jsonError($app, 400, 'You must specify a valid id');
+            }
+
+            $data = LaneRestrictionUtils::lanerestrictionArray($laneRestriction);
+
+            ApiUtils::jsonRender($app, $data);
+
+        });
+        return $app;
+    }
+
+    /**
      * /lanerestrictions
      * Returns all lanerestrictions for given type and type_id
      */
@@ -83,6 +106,7 @@ class LanerestrictionsController extends Controller {
 
         $app = ApiUtils::createApi();
 
+        $app = $this->laneRestriction($app);
         $app = $this->laneRestrictionsGET($app);
         $app = $this->laneRestrictionsPOST($app);
 
