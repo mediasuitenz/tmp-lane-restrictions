@@ -32,4 +32,10 @@ class ApiUtils {
         $response->body(json_encode($data));
     }
 
+    public static function jsonError($app, $status, $message) {
+        $response = $app->response();
+        $response->header('Content-Type', 'application/json');
+        $app->halt($status, json_encode(array('message' => $message)));
+    }
+
 }
