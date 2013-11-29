@@ -33,7 +33,7 @@ class OsmLaneRestriction extends CActiveRecord
     {
         return array(
             array('type, type_id, osm_node_a_id, osm_node_a_version_id,
-                osm_node_b_id, osm_node_b_version_id',
+                osm_node_b_id, osm_node_b_version_id, starts_at, ends_at',
                 'required'
             ),
             array('type_id, osm_node_a_id, osm_node_a_version_id,
@@ -76,6 +76,18 @@ class OsmLaneRestriction extends CActiveRecord
     public static function model($className=__CLASS__)
     {
         return parent::model($className);
+    }
+
+    public function beforeSave() {
+        $now = new DateTime('now', new DateTimeZone(getenv('TIME_ZONE')));
+        $nowFormatted = $now->format('Y-m-d H:i:s');
+        if ($this->isNewRecord) {
+            $this->created_at = $nowFormatted
+            $this->updated_at = $nowFormatted
+        } else {
+            $this->updated_at = $nowFormatted
+        }
+        return parent::beforeSave();
     }
 
     /**
