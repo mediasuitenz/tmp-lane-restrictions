@@ -36,27 +36,82 @@ class LanerestrictionsController extends Controller {
             $type = Yii::app()->request->getQuery('type');
             $typeId = Yii::app()->request->getQuery('type_id');
             $typeIds = Yii::app()->request->getQuery('type_ids');
-
-            if (empty($type)) {
-                ApiUtils::jsonError($app, 400, 'You must specify type param');
-            }
-
-            if (empty($typeId) && empty($typeIds)) {
-                ApiUtils::jsonError($app, 400,
-                    'You must specify either typeId or typeIds param'
-                );
-            }
+            $nodeId = Yii::app()->request->getQuery('node_id');
+            $nodeIds = Yii::app()->request->getQuery('node_ids');
+            $path = Yii::app()->request->getQuery('path');
+            $paths = Yii::app()->request->getQuery('paths');
+            $hasRestrictions = Yii::app()->request->getQuery('has_restrictions');
 
             if (false === empty($typeId) && false === empty($typeIds)) {
                 ApiUtils::jsonError($app, 400,
-                    'You must not specify both typeId or typeIds params'
+                    'You may specify either type_id or type_ids, not both'
                 );
+            }
+
+            if (false === empty($nodeId) && false === empty($nodeIds)) {
+                ApiUtils::jsonError($app, 400,
+                    'You may specify either node_id or node_ids, not both'
+                );
+            }
+
+            if (false === empty($path) && false === empty($paths)) {
+                ApiUtils::jsonError($app, 400,
+                    'You may specify either path or paths, not both'
+                );
+            }
+
+            if ((false === empty($typeId) || false === empty($typeIds))
+                && empty($type)
+            ) {
+                ApiUtils::jsonError($app, 400,
+                    'You must specify type param with type_id or type_ids param'
+                );
+            }
+
+            if (false === empty($typeIds)) {
+
+                $typeIds = json_decode($typeIds, true);
+                if (false === is_array($typeIds)) {
+                    $message = 'type_ids must be an array eg. ' .
+                        'type_ids=[123,124,125]';
+                    ApiUtils::jsonError($app, 400, $message);
+                }
+
+            }
+
+            if (false === empty($nodeIds)) {
+
+                $nodeIds = json_decode($nodeIds, true);
+
+                if (false === is_array($nodeIds)) {
+                    $message = 'node_ids must be an array eg. ' .
+                        'node_ids=[12312312,12412312,12512312]';
+                    ApiUtils::jsonError($app, 400, $message);
+                }
+
+            }
+
+            if (false === empty($paths)) {
+
+                $paths = json_decode($paths, true);
+
+                if (false === is_array($paths)) {
+                    $message = 'paths must be an array eg. ' .
+                        'paths=[[12312312,12341233],[12412312,12341233]]';
+                    ApiUtils::jsonError($app, 400, $message);
+                }
+
             }
 
             $laneRestrictions = OsmLaneRestriction::model()
                 ->type($type)
                 ->typeId($typeId)
-                ->typeIds(json_decode($typeIds, true))
+                ->typeIds($typeIds)
+                ->osmNode($nodeId)
+                ->osmNodes($nodeIds)
+                ->osmPath($path)
+                ->osmPaths($paths)
+                ->hasRestrictions($hasRestrictions)
                 ->findAll();
 
             //run the collection through array map to convert objects
