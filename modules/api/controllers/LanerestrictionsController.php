@@ -91,12 +91,42 @@ class LanerestrictionsController extends Controller {
 
             }
 
+            if (false === empty($path)) {
+
+                $path = json_decode($path, true);
+
+                if (false === is_array($path)) {
+                    $message = 'path must be an array eg. ' .
+                        'path=[12312312,12341233]';
+                    ApiUtils::jsonError($app, 400, $message);
+                }
+
+                if (false === isset($path[0]) || false === isset($path[1])) {
+                    $message = 'path array must have 2 values eg. ' .
+                        'path=[12312312,12341233]';
+                    ApiUtils::jsonError($app, 400, $message);
+                }
+
+            }
+
             if (false === empty($paths)) {
 
                 $paths = json_decode($paths, true);
 
                 if (false === is_array($paths)) {
                     $message = 'paths must be an array eg. ' .
+                        'paths=[[12312312,12341233],[12412312,12341233]]';
+                    ApiUtils::jsonError($app, 400, $message);
+                }
+
+                if (false === is_array($paths[0])) {
+                    $message = 'paths must be an array of arrays eg. ' .
+                        'paths=[[12312312,12341233],[12412312,12341233]]';
+                    ApiUtils::jsonError($app, 400, $message);
+                }
+
+                if (false === isset($paths[0][0]) || false === isset($paths[0][1])) {
+                    $message = 'paths must be an array of integer arrays eg. ' .
                         'paths=[[12312312,12341233],[12412312,12341233]]';
                     ApiUtils::jsonError($app, 400, $message);
                 }
