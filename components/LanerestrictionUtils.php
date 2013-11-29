@@ -21,6 +21,22 @@ class LanerestrictionUtils {
             is_null($attrs['b_to_a_speed_limit']) ?
                 null : (int)$attrs['b_to_a_speed_limit'];
 
+        $startsAt = DateTime::createFromFormat('Y-m-d H:i:s', $attrs['starts_at']);
+        $startsAt->setTimeZone(new DateTimeZone(getenv('TIME_ZONE')));
+        $attrs['starts_at'] = $startsAt->format(DateTime::ISO8601);
+
+        $endsAt = DateTime::createFromFormat('Y-m-d H:i:s', $attrs['ends_at']);
+        $endsAt->setTimeZone(new DateTimeZone(getenv('TIME_ZONE')));
+        $attrs['ends_at'] = $endsAt->format(DateTime::ISO8601);
+
+        $createdAt = DateTime::createFromFormat('Y-m-d H:i:s', $attrs['created_at']);
+        $createdAt->setTimeZone(new DateTimeZone(getenv('TIME_ZONE')));
+        $attrs['created_at'] = $createdAt->format(DateTime::ISO8601);
+
+        $updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $attrs['updated_at']);
+        $updatedAt->setTimeZone(new DateTimeZone(getenv('TIME_ZONE')));
+        $attrs['updated_at'] = $updatedAt->format(DateTime::ISO8601);
+
         return $attrs;
     }
 }
