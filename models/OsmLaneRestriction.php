@@ -140,11 +140,10 @@ class OsmLaneRestriction extends CActiveRecord
         }
         $criteria = new CDbCriteria;
         $criteria->addCondition(
-            'osm_node_a_id = :osmNodeIdA or osm_node_b_id = :osmNodeIdB'
+            'osm_node_a_id = :osmNodeId OR osm_node_b_id = :osmNodeId'
         );
         $criteria->params = array(
-            ':osmNodeIdA' => $osmNodeId,
-            ':osmNodeIdB' => $osmNodeId,
+            ':osmNodeId' => $osmNodeId,
         );
         $this->getDbCriteria()->mergeWith($criteria);
         return $this;
@@ -182,7 +181,7 @@ class OsmLaneRestriction extends CActiveRecord
         if (is_null($osmPath)) {
             return $this;
         }
-        $criteria = new CDbCriteria;
+        $criteria = $this->pathCriteria($osmPath);
         $this->getDbCriteria()->mergeWith($criteria);
         return $this;
     }
@@ -191,9 +190,31 @@ class OsmLaneRestriction extends CActiveRecord
         if (is_null($osmPaths)) {
             return $this;
         }
+
         $criteria = new CDbCriteria;
+
+        foreach($osmPaths as $path) {
+            $subCriteria = $this->pathCriteria($path);
+            $criteria->mergeWith($subCriteria, 'OR');
+        }
+
         $this->getDbCriteria()->mergeWith($criteria);
         return $this;
+    }
+
+    private function pathCriteria(array $osmPath) {
+        $p = new CHtmlPurifier();
+        $pathA = $p->purify($osmPath[0]);
+        $pathB = $p->purify($osmPath[1]);
+        $criteria = new CDbCriteria;
+        $criteria->addCondition(
+            "osm_node_a_id = {$pathA} AND osm_node_b_id = {$pathB}"
+        );
+        $criteria->addCondition(
+            "osm_node_b_id = {$pathA} AND osm_node_a_id = {$pathB}",
+            'OR'
+        );
+        return $criteria;
     }
 
 }
