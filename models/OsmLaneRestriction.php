@@ -134,6 +134,14 @@ class OsmLaneRestriction extends CActiveRecord
         return $this;
     }
 
+    /**
+     * (Scope)
+     * Allows filtering to a specific Open street maps node id
+     *
+     * @param  int $osmNodeId     - id of the OSM node
+     *
+     * @return OsmLaneRestriction - model for chaining
+     */
     public function osmNode($osmNodeId = null) {
         if (is_null($osmNodeId)) {
             return $this;
@@ -149,6 +157,15 @@ class OsmLaneRestriction extends CActiveRecord
         return $this;
     }
 
+    /**
+     * (Scope)
+     * Allows filtering to a set of Open street maps node ids
+     *
+     * @param  array $osmNodeId   - expects an array of osm node ids
+     *                              @example array(array(12345,12335))
+     *
+     * @return OsmLaneRestriction - model for chaining
+     */
     public function osmNodes(array $osmNodeIds = null) {
         if (is_null($osmNodeIds)) {
             return $this;
@@ -160,6 +177,18 @@ class OsmLaneRestriction extends CActiveRecord
         return $this;
     }
 
+    /**
+     * (Scope)
+     * Limits returned results to only those with valid restrictions in place
+     * A lane restriction record is considered to have a restriction in place if
+     * any of the following is true. a -> b is closed, b -> a is closed,
+     * a -> b speed is not null or b -> a speed is not null
+     *
+     * @param  mixed $hasRestrictions - (string|boolean|int) whether to filter
+     *                                  will filter on a 1, '1' or true value
+     *
+     * @return OsmLaneRestriction     - model for chaining
+     */
     public function hasRestrictions($hasRestrictions = null) {
 
         if (is_null($hasRestrictions)
@@ -177,6 +206,15 @@ class OsmLaneRestriction extends CActiveRecord
         return $this;
     }
 
+    /**
+     * (Scope)
+     * Filters based on given single osm path array. A path is an array with
+     * 2 integer osm node id values. @example array(12345,123124)
+     *
+     * @param  array $osmPath     - path to restrict result set to
+     *
+     * @return OsmLaneRestriction - model for chaining
+     */
     public function osmPath(array $osmPath = null) {
         if (is_null($osmPath)) {
             return $this;
@@ -186,6 +224,18 @@ class OsmLaneRestriction extends CActiveRecord
         return $this;
     }
 
+    /**
+     * (Scope)
+     * Filters based on an array of osm path arrays. Will only return a result
+     * if it has a node id A and a node id B that match one of the passed in
+     * path nodes @example array(array(12345,12334), array(12346,12345))
+     * If a record has node a id 12334 and node b id of 12345 it would match
+     * Order of A and B is not important
+     *
+     * @param  array $osmPaths    - array of osm node id arrays
+     *
+     * @return OsmLaneRestriction - model for chaining
+     */
     public function osmPaths(array $osmPaths = null) {
         if (is_null($osmPaths)) {
             return $this;
@@ -202,6 +252,15 @@ class OsmLaneRestriction extends CActiveRecord
         return $this;
     }
 
+    /**
+     * Scope helper method. Returns a criteria object to match paths given
+     * a single path array with a node a id and a node b id
+     *
+     * @param  array $osmPath - array with 2 node id values
+     *                          @example array(12345,12314)
+     *
+     * @return CDbCriteria    - criteria object
+     */
     private function pathCriteria(array $osmPath) {
         $p = new CHtmlPurifier();
         $pathA = $p->purify($osmPath[0]);
