@@ -44,6 +44,8 @@ class LanerestrictionsController extends Controller {
             $path            = $request->params('path');
             $paths           = $request->params('paths');
             $hasRestrictions = $request->params('has_restrictions');
+            $limit           = $request->params('limit');
+            $offset          = $request->params('offset');
 
             //Perform checks
             $msg = false;
@@ -64,6 +66,8 @@ class LanerestrictionsController extends Controller {
                 ->osmPath(json_decode($path, true))
                 ->osmPaths(json_decode($paths, true))
                 ->hasRestrictions($hasRestrictions)
+                ->limit($limit)
+                ->offset($offset)
                 ->findAll();
 
             //run the collection through array map to convert objects

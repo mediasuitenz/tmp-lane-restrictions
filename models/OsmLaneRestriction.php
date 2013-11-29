@@ -253,6 +253,37 @@ class OsmLaneRestriction extends CActiveRecord
     }
 
     /**
+     * (Scope)
+     * Limits returned results to given $limit or 20 if not limit is given
+     *
+     * @param  int $limit         - number of results to limit results set to
+     *
+     * @return OsmLaneRestriction - model for chaining
+     */
+    public function limit($limit = null) {
+        $criteria = new CDbCriteria;
+        $criteria->limit = (empty($limit)) ? 20 : $limit;
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    /**
+     * (Scope)
+     * Adjusts where in the result set to start from when returning. Defaults
+     * to 0 (the start of the result set)
+     *
+     * @param  int $offset        - How much offset results should be returned
+     *
+     * @return OsmLaneRestriction - model for chaining
+     */
+    public function offset($offset = null) {
+        $criteria = new CDbCriteria;
+        $criteria->offset = (empty($offset)) ? 0 : $offset;
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    /**
      * Scope helper method. Returns a criteria object to match paths given
      * a single path array with a node a id and a node b id
      *
