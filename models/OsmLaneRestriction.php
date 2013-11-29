@@ -87,9 +87,12 @@ class OsmLaneRestriction extends CActiveRecord
      * @return CActiveRecord - Returns this model instance
      */
     public function type($type) {
+        if (is_null($type)) {
+            return $this;
+        }
         $criteria = new CDbCriteria;
         $criteria->addCondition('type = :type');
-        $criteria->params = array('type' => $type);
+        $criteria->params = array(':type' => $type);
         $this->getDbCriteria()->mergeWith($criteria);
         return $this;
     }
@@ -108,7 +111,7 @@ class OsmLaneRestriction extends CActiveRecord
         }
         $criteria = new CDbCriteria;
         $criteria->addCondition('type_id = :typeId');
-        $criteria->params = array('typeId' => $typeId);
+        $criteria->params = array(':typeId' => $typeId);
         $this->getDbCriteria()->mergeWith($criteria);
         return $this;
     }
