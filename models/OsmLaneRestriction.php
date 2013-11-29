@@ -128,11 +128,72 @@ class OsmLaneRestriction extends CActiveRecord
         if (is_null($typeIds)) {
             return $this;
         }
-        // var_dump($typeIds); die;
         $criteria = new CDbCriteria;
         $criteria->addInCondition('type_id', $typeIds);
-        // $criteria->addInCondition('type_id', array(123, 124));
         $this->getDbCriteria()->mergeWith($criteria);
         return $this;
     }
+
+    public function osmNode($osmNodeId = null) {
+        if (is_null($osmNodeId)) {
+            return $this;
+        }
+        $criteria = new CDbCriteria;
+        $criteria->addCondition(
+            'osm_node_a_id = :osmNodeIdA or osm_node_b_id = :osmNodeIdB'
+        );
+        $criteria->params = array(
+            ':osmNodeIdA' => $osmNodeId,
+            ':osmNodeIdB' => $osmNodeId,
+        );
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    public function osmNodes(array $osmNodeIds = null) {
+        if (is_null($osmNodeIds)) {
+            return $this;
+        }
+        $criteria = new CDbCriteria;
+        $criteria->addInCondition('osm_node_a_id', $osmNodeIds);
+        $criteria->addInCondition('osm_node_b_id', $osmNodeIds, 'OR');
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    public function hasRestrictions($hasRestrictions = null) {
+
+        if (is_null($hasRestrictions)
+            || false === in_array($hasRestrictions, array('1','true'))
+        ) {
+            return $this;
+        }
+
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('a_to_b_is_closed = 1');
+        $criteria->addCondition('b_to_a_is_closed = 1', 'OR');
+        $criteria->addCondition('a_to_b_speed_limit IS NOT NULL', 'OR');
+        $criteria->addCondition('b_to_a_speed_limit IS NOT NULL', 'OR');
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    public function osmPath(array $osmPath = null) {
+        if (is_null($osmPath)) {
+            return $this;
+        }
+        $criteria = new CDbCriteria;
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    public function osmPaths(array $osmPaths = null) {
+        if (is_null($osmPaths)) {
+            return $this;
+        }
+        $criteria = new CDbCriteria;
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
 }
