@@ -13,6 +13,10 @@ class ApiUtils {
     const PATHS_NOT_ARRAY = 'paths must be an array eg. paths=[[12312312,12341233],[12412312,12341233]]';
     const PATHS_INVALID_ARRAY = 'paths must be an array of arrays eg. paths=[[12312312,12341233],[12412312,12341233]]';
     const PATHS_INVALID_CHILD_ARRAY = 'paths must be an array of integer arrays eg. paths=[[12312312,12341233],[12412312,12341233]]';
+    const STARTS_AT_INVALID = 'starts_at must be in ISO8601 format';
+    const ENDS_AT_INVALID = 'ends_at must be in ISO8601 format';
+    const ENDS_AT_REQUIRED = 'because starts_at is specified, you must also specify ends_at';
+    const STARTS_AT_REQUIRED = 'because ends_at is specified, you must also specify starts_at';
 
     /**
      * Creates a Slim api app
@@ -105,6 +109,29 @@ class ApiUtils {
             }
             if (false === isset($paths[0][0]) || false === isset($paths[0][1])) {
                 $msg = self::PATHS_INVALID_CHILD_ARRAY;
+            }
+        }
+        return $msg;
+    }
+
+    public static function checkDateTimeParams($msg, $startsAt = null, $endsAt = null) {
+
+        if (empty($startsAt) && false === empty($endsAt)) {
+            $msg = self::ENDS_AT_REQUIRED;
+        }
+
+        if (empty($endsAt) && false === empty($startsAt)) {
+            $msg = self::STARTS_AT_REQUIRED;
+        }
+
+        if (false === empty($startsAt)) {
+            if (false === DateTime::createFromFormat(DateTime::ISO8601, $startsAt)) {
+                $msg = self::STARTS_AT_INVALID;
+            }
+        }
+        if (false === empty($endsAt)) {
+            if (false === DateTime::createFromFormat(DateTime::ISO8601, $endsAt)) {
+                $msg = self::ENDS_AT_INVALID;
             }
         }
         return $msg;
