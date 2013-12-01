@@ -132,6 +132,7 @@ class LanerestrictionsController extends Controller {
 
         $app->run();
 
+        Yii::app()->end();
     }
 
 }
