@@ -46,12 +46,18 @@ class LanerestrictionsController extends Controller {
             $hasRestrictions = $request->params('has_restrictions');
             $limit           = $request->params('limit');
             $offset          = $request->params('offset');
+            $startsAt        = $request->params('starts_at');
+            $endsAt          = $request->params('ends_at');
+
+            $startsAt = str_replace(' ', '+', $startsAt);
+            $endsAt = str_replace(' ', '+', $endsAt);
 
             //Perform checks
             $msg = false;
             $msg = ApiUtils::checkTypeParams($msg, $type, $typeId, $typeIds);
             $msg = ApiUtils::checkNodeParams($msg, $nodeId, $nodeIds);
             $msg = ApiUtils::checkPathParams($msg, $path, $paths);
+            $msg = ApiUtils::checkDateTimeParams($msg, $startsAt, $endsAt);
             if ($msg) {
                 ApiUtils::jsonError($app, 400, $msg);
             }
@@ -68,6 +74,8 @@ class LanerestrictionsController extends Controller {
                 ->hasRestrictions($hasRestrictions)
                 ->limit($limit)
                 ->offset($offset)
+                ->startsAt($startsAt)
+                ->endsAt($endsAt)
                 ->findAll();
 
             //run the collection through array map to convert objects

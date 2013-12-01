@@ -319,4 +319,31 @@ class OsmLaneRestriction extends CActiveRecord
         return $criteria;
     }
 
+    public function startsAt($startsAt = null) {
+        if (empty($startsAt)) {
+            $startsAt = DateTimeUtils::timeStamp();
+        }
+        $isoFormat = LanerestrictionUtils::moduleParam('apiDateTimeOutputFormat');
+        $startsAt = DateTimeUtils::toMysql($startsAt, $isoFormat);
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('ends_at >= :startsAt');
+        $criteria->params = array(':startsAt' => $startsAt);
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    public function endsAt($endsAt = null) {
+        if (empty($endsAt)) {
+            $interval = new DateInterval('P2D');
+            $endsAt = DateTimeUtils::timeStampFromNow($interval);
+        }
+        $isoFormat = LanerestrictionUtils::moduleParam('apiDateTimeOutputFormat');
+        $endsAt = DateTimeUtils::toMysql($endsAt, $isoFormat);
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('starts_at <= :endsAt');
+        $criteria->params = array(':endsAt' => $endsAt);
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
 }
