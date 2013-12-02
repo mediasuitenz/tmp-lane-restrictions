@@ -10,6 +10,8 @@ class LanerestrictionsController extends Controller {
 
         $app->get('/lanerestrictions/api/lanerestrictions/:id', function ($id) use ($app) {
 
+            $request = $app->request();
+            $format = $request->params('format');
 
             $laneRestriction = OsmLaneRestriction::model()->findByPk($id);
 
@@ -19,7 +21,11 @@ class LanerestrictionsController extends Controller {
 
             $data = LaneRestrictionUtils::lanerestrictionArray($laneRestriction);
 
-            ApiUtils::jsonRender($app, $data);
+            if ($format === 'geojson') {
+                ApiUtils::geoJsonRender($app, array($data));
+            } else {
+                ApiUtils::jsonRender($app, $data);
+            }
 
         });
         return $app;
