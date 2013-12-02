@@ -346,4 +346,34 @@ class OsmLaneRestriction extends CActiveRecord
         return $this;
     }
 
+    public function nearby($lat = null, $lng = null, $distance = 1) {
+        if (empty($lat) || empty($lat)) {
+            return $this;
+        }
+
+        $p = new CHtmlPurifier();
+        $lat = $p->purify($lat);
+        $lng = $p->purify($lng);
+        $distance = $p->purify($distance);
+
+        $topRight = GeoUtils::dueCoords($lat, $lng, 45, $distance);
+        $bottomRight = GeoUtils::dueCoords($lat, $lng, 135, $distance);
+        $bottomLeft = GeoUtils::dueCoords($lat, $lng, 225, $distance);
+        $topLeft = GeoUtils::dueCoords($lat, $lng, 315, $distance);
+
+        $tr = "{$topRight['lat']} {$topRight['lng']}";
+        $br = "{$bottomRight['lat']} {$bottomRight['lng']}";
+        $bl = "{$bottomLeft['lat']} {$bottomLeft['lng']}";
+        $tl = "{$topLeft['lat']} {$topLeft['lng']}";
+
+        $boundingRectangle = "POLYGON(({$tl},{$tr},{$br},{$bl},{$tl}))";
+        $boundingGeometry = "PolygonFromText('{$boundingRectangle}')";
+
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("MBRContains($boundingGeometry, mysql_geometric_path)");
+        $criteria->addCondition("MBRIntersects($boundingGeometry, mysql_geometric_path)", 'OR');
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
 }
