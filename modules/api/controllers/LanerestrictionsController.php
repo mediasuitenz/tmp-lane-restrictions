@@ -54,6 +54,9 @@ class LanerestrictionsController extends Controller {
             $offset          = $request->params('offset');
             $startsAt        = $request->params('starts_at');
             $endsAt          = $request->params('ends_at');
+            $latlng          = $request->params('nearby');
+            $distance        = $request->params('distance');
+            $format          = $request->params('format');
 
             $startsAt = str_replace(' ', '+', $startsAt);
             $endsAt = str_replace(' ', '+', $endsAt);
@@ -64,9 +67,14 @@ class LanerestrictionsController extends Controller {
             $msg = ApiUtils::checkNodeParams($msg, $nodeId, $nodeIds);
             $msg = ApiUtils::checkPathParams($msg, $path, $paths);
             $msg = ApiUtils::checkDateTimeParams($msg, $startsAt, $endsAt);
+            $msg = ApiUtils::checkGeoParams($msg, $latlng, $distance);
             if ($msg) {
                 ApiUtils::jsonError($app, 400, $msg);
             }
+
+            $latlng = explode(',', $latlng);
+            $lat = $latlng[0];
+            $lng = $latlng[1];
 
             //Fetch lane restriction objects
             $laneRestrictions = OsmLaneRestriction::model()
@@ -82,6 +90,7 @@ class LanerestrictionsController extends Controller {
                 ->offset($offset)
                 ->startsAt($startsAt)
                 ->endsAt($endsAt)
+                ->nearby($lat, $lng, $distance)
                 ->findAll();
 
             //run the collection through array map to convert objects
@@ -91,8 +100,11 @@ class LanerestrictionsController extends Controller {
                 $laneRestrictions
             );
 
-            //render out the result
-            ApiUtils::jsonRender($app, $data);
+            if ($format === 'geojson') {
+                ApiUtils::geoJsonRender($app, $data);
+            } else {
+                ApiUtils::jsonRender($app, $data);
+            }
 
         });
         return $app;
