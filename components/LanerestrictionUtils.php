@@ -12,6 +12,10 @@ class LanerestrictionUtils {
         $attrs['osm_node_b_id'] = (int)$attrs['osm_node_b_id'];
         $attrs['osm_node_a_version_id'] = (int)$attrs['osm_node_a_version_id'];
         $attrs['osm_node_b_version_id'] = (int)$attrs['osm_node_b_version_id'];
+        $attrs['osm_node_a_lat'] = (double)$attrs['osm_node_a_lat'];
+        $attrs['osm_node_b_lat'] = (double)$attrs['osm_node_b_lat'];
+        $attrs['osm_node_a_lng'] = (double)$attrs['osm_node_a_lng'];
+        $attrs['osm_node_b_lng'] = (double)$attrs['osm_node_b_lng'];
         $attrs['a_to_b_is_closed'] = (boolean)$attrs['a_to_b_is_closed'];
         $attrs['b_to_a_is_closed'] = (boolean)$attrs['b_to_a_is_closed'];
         $attrs['a_to_b_speed_limit'] =
@@ -52,6 +56,8 @@ class LanerestrictionUtils {
             $timeZone
         );
         $attrs['updated_at'] = $updatedAt->format($format);
+
+        unset($attrs['mysql_geometric_path']);
 
         return $attrs;
     }
