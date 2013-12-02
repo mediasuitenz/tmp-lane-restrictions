@@ -176,4 +176,21 @@ class ApiUtils {
         return $msg;
     }
 
+    public static function checkGeoParams($msg, $latlng, $distance) {
+        if (empty($latlng) && empty($distance)) {
+            return $msg;
+        }
+        $latlngArray = explode(',', $latlng);
+        if (count($latlngArray) !== 2) {
+            $msg = self::LAT_LNG_INVALID;
+        }
+        if (false === strpos($latlng, ',')) {
+            $msg = self::LAT_LNG_INVALID;
+        }
+        if (empty($latlng) && false === empty($distance)) {
+            $msg = self::LAT_LNG_NOT_SET;
+        }
+        return $msg;
+    }
+
 }
