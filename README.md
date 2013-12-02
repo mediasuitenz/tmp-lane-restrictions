@@ -15,6 +15,30 @@ API for fetching and creating lane restriction data.
 /lanerestrictions/api/lanerestrictions
 ```
 
+## Example returned data
+```json
+[
+{
+"id": 1,
+"type": "RoadClosure",
+"type_id": 1234,
+"osm_node_a_id": 123123121,
+"osm_node_a_version_id": 1,
+"osm_node_b_id": 123123122,
+"osm_node_b_version_id": 1,
+"a_to_b_is_closed": false,
+"b_to_a_is_closed": false,
+"a_to_b_speed_limit": null,
+"b_to_a_speed_limit": null,
+"starts_at": "2015-01-01T00:00:00+0000",
+"ends_at": "2016-01-01T00:00:00+0000",
+"created_at": "2013-10-01T09:00:00+0000",
+"updated_at": "2013-10-01T09:00:00+0000"
+}
+]
+```
+
+
 ## Url params
 
 ### limit
