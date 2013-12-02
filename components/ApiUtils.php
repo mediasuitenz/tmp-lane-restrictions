@@ -17,6 +17,9 @@ class ApiUtils {
     const ENDS_AT_INVALID = 'ends_at must be in ISO8601 format';
     const ENDS_AT_REQUIRED = 'because starts_at is specified, you must also specify ends_at';
     const STARTS_AT_REQUIRED = 'because ends_at is specified, you must also specify starts_at';
+    const LAT_LNG_NOT_SET = 'because distance param is set, nearby param must also be set';
+    const DISTANCE_NOT_SET = 'because nearby param is set, distance param must also be set';
+    const LAT_LNG_INVALID = 'nearby must be a comma separated coord string eg. nearby=123.123,-34.345';
 
     /**
      * Creates a Slim api app
