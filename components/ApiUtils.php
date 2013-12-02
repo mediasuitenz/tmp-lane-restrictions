@@ -52,6 +52,42 @@ class ApiUtils {
         $response->body(json_encode($data));
     }
 
+    public static function geoJsonRender($app, array $laneRestrictions) {
+
+        //TODO:: GeoJsonUtils is a dependency outside of the module. It should
+        //be extracted out into a proper dependency that can be included in
+        //multiple modules and tested thoroughly
+
+        //import stubs for php 5.3 compatability
+        Yii::import('vendor.jmikola.geojson.stubs.*');
+
+
+        $collection = GeoJsonUtils::featureCollection();
+
+        foreach ($laneRestrictions as $laneRestriction) {
+
+            $polyline = array(
+                array(
+                    (double)$laneRestriction['osm_node_a_lat'],
+                    (double)$laneRestriction['osm_node_a_lng'],
+                ),
+                array(
+                    (double)$laneRestriction['osm_node_b_lat'],
+                    (double)$laneRestriction['osm_node_b_lng'],
+                ),
+            );
+
+            //create a feature
+            $collection->addPolyline($polyline, $laneRestriction, $laneRestriction['id']);
+
+        }
+        $data = $collection->render(true);
+        $response = $app->response();
+        $response->header('Content-Type', 'application/json');
+        $response->body($data);
+
+    }
+
     public static function jsonError($app, $status, $message) {
         $response = $app->response();
         $response->header('Content-Type', 'application/json');
