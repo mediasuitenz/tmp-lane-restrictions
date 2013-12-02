@@ -73,8 +73,9 @@ class LanerestrictionsController extends Controller {
             }
 
             $latlng = explode(',', $latlng);
-            $lat = $latlng[0];
-            $lng = $latlng[1];
+            $lat = empty($latlng[0]) ? null : $latlng[0];
+            $lng = empty($latlng[1]) ? null : $latlng[1];
+
 
             //Fetch lane restriction objects
             $laneRestrictions = OsmLaneRestriction::model()
