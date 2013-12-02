@@ -22,7 +22,9 @@ Specifies maximum number of matching results to be returned
 Default: 20
 
 example
-```/lanerestrictions/api/lanerestrictions?limit=2```
+```
+/lanerestrictions/api/lanerestrictions?limit=2
+```
 
 ### offset
 
@@ -31,7 +33,9 @@ Specifies the point to start returning results from in the matching results
 Default: 0
 
 example
-```/lanerestrictions/api/lanerestrictions?offset=4```
+```
+/lanerestrictions/api/lanerestrictions?offset=4
+```
 
 ### starts_at
 
@@ -42,7 +46,9 @@ Note. starts_at must be used in conjunction with ends_at
 Default: the current ISO8601 date/time
 
 example
-```/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00+0000&ends_at=2013-10-03T09:30:00+0000```
+```
+/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00+0000&ends_at=2013-10-03T09:30:00Z
+```
 
 ### ends_at
 
@@ -53,7 +59,9 @@ Note. ends_at must be used in conjunction with starts_at
 Default: 2 weeks from the current ISO8601 date/time
 
 example
-```/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00+0000&ends_at=2013-10-03T09:30:00+0000```
+```
+/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00+0000&ends_at=2013-10-03T09:30:00z
+```
 
 ### node_id
 
@@ -63,7 +71,9 @@ node id should be returned
 Default: null
 
 example
-```/lanerestrictions/api/lanerestrictions?node_id=12312341```
+```
+/lanerestrictions/api/lanerestrictions?node_id=12312341
+```
 
 #### node_ids
 
@@ -74,7 +84,9 @@ eg. [1213124,123123,12312312]
 Default: null
 
 example
-```/lanerestrictions/api/lanerestrictions?node_ids=[12312341,12345678]```
+```
+/lanerestrictions/api/lanerestrictions?node_ids=[12312341,12345678]
+```
 
 
 #### path
@@ -91,7 +103,9 @@ will not be considered a match.
 Default: null
 
 example
-```/lanerestrictions/api/lanerestrictions?path=[12312341,12345678]```
+```
+/lanerestrictions/api/lanerestrictions?path=[12312341,12345678]
+```
 
 #### path_ids
 
@@ -104,7 +118,9 @@ positives.
 Default: null
 
 example
-```/lanerestrictions/api/lanerestrictions?path=[[12122341,12455678],[12312341,12345678],[12982341,12340478]]```
+```
+/lanerestrictions/api/lanerestrictions?path=[[12122341,12455678],[12312341,12345678],[12982341,12340478]]
+```
 
 #### type
 
@@ -115,35 +131,43 @@ RoadClosure. These refer to the internal db tables of the same name.
 Default: all types
 
 example
-```/lanerestrictions/api/lanerestrictions?type=RoadClosure```
+```
+/lanerestrictions/api/lanerestrictions?type=RoadClosure
+```
 or
-```/lanerestrictions/api/lanerestrictions?type=TrafficManagementPlan```
+```
+/lanerestrictions/api/lanerestrictions?type=TrafficManagementPlan
+```
 
 #### type_id
 
-In conjunction with ```type``` a type_id can be specified which must correspond
-to an id in the table specified by 'type' eg. If you specify type=RoadClosure
-and ```type_id=123```, if there is a record with ```type_id``` 123 and type ```RoadClosure```
+In conjunction with `type` a type_id can be specified which must correspond
+to an id in the table specified by `type` eg. If you specify type=RoadClosure
+and `type_id=123`, if there is a record with `type_id` 123 and type `RoadClosure`
 then that record will be returned.
 
-Note: you must specify the ```type``` param if you specify the ```type_id``` param
+Note: you must specify the `type` param if you specify the `type_id` param
 
 Default: null
 
 example
-```/lanerestrictions/api/lanerestrictions?type=RoadClosure&type_id=123```
+```
+/lanerestrictions/api/lanerestrictions?type=RoadClosure&type_id=123
+```
 
 #### type_ids
 
-Instead of specifying a single ```type_id``` you may instead specify multiple
-```type_ids``` through this param. ```type_ids``` should be specified as a
-json encoded array eg. ```[113,124,125]``` and as with ```type_id``` you must
-specify ```type``` if you specify ```type_ids```
+Instead of specifying a single `type_id` you may instead specify multiple
+`type_ids` through this param. `type_ids` should be specified as a
+json encoded array eg. `[113,124,125]` and as with `type_id` you must
+specify `type` if you specify `type_ids`
 
 Default: null
 
 example
-```/lanerestrictions/api/lanerestrictions?type=RoadClosure&type_ids=[123,124,125]```
+```
+/lanerestrictions/api/lanerestrictions?type=RoadClosure&type_ids=[123,124,125]
+```
 
 #### has_restrictions
 
@@ -159,6 +183,10 @@ Default: false, all records will be returned regardless of what lane restriction
 values they have
 
 example
-```/lanerestrictions/api/lanerestrictions?has_restrictions=true```
+```
+/lanerestrictions/api/lanerestrictions?has_restrictions=true
+```
 or
-```/lanerestrictions/api/lanerestrictions?has_restrictions=1```
+```
+/lanerestrictions/api/lanerestrictions?has_restrictions=1
+```
