@@ -11,7 +11,9 @@ API for fetching and creating lane restriction data.
 
 ## Endpoints
 
+```
 /lanerestrictions/api/lanerestrictions
+```
 
 ## Url params
 
@@ -47,7 +49,7 @@ Default: the current ISO8601 date/time
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00+0000&ends_at=2013-10-03T09:30:00Z
+/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00Z&ends_at=2013-10-03T09:30:00Z
 ```
 
 ### ends_at
@@ -60,7 +62,7 @@ Default: 2 weeks from the current ISO8601 date/time
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00+0000&ends_at=2013-10-03T09:30:00z
+/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00Z&ends_at=2013-10-03T09:30:00Z
 ```
 
 ### node_id
@@ -75,7 +77,7 @@ example
 /lanerestrictions/api/lanerestrictions?node_id=12312341
 ```
 
-#### node_ids
+### node_ids
 
 Specifies that only lane restriction records with the given open street maps
 node ids should be returned. node ids should be given as a json encoded array
@@ -88,8 +90,7 @@ example
 /lanerestrictions/api/lanerestrictions?node_ids=[12312341,12345678]
 ```
 
-
-#### path
+### path
 
 Specifies that records should only be returned if they have A and B open street map
 node values that match the given open street maps node id pair values being queried.
@@ -107,7 +108,7 @@ example
 /lanerestrictions/api/lanerestrictions?path=[12312341,12345678]
 ```
 
-#### path_ids
+### path_ids
 
 Basically the same as for 'path' described above except that it will accept an
 array of path arrays and try to match each one. This way you can pass in a list
@@ -122,7 +123,7 @@ example
 /lanerestrictions/api/lanerestrictions?path=[[12122341,12455678],[12312341,12345678],[12982341,12340478]]
 ```
 
-#### type
+### type
 
 Specifies which type of lane restriction records to return.
 Currently there are 2 types of lane restrictions, TrafficManagementPlan and
@@ -139,7 +140,7 @@ or
 /lanerestrictions/api/lanerestrictions?type=TrafficManagementPlan
 ```
 
-#### type_id
+### type_id
 
 In conjunction with `type` a type_id can be specified which must correspond
 to an id in the table specified by `type` eg. If you specify type=RoadClosure
@@ -155,7 +156,7 @@ example
 /lanerestrictions/api/lanerestrictions?type=RoadClosure&type_id=123
 ```
 
-#### type_ids
+### type_ids
 
 Instead of specifying a single `type_id` you may instead specify multiple
 `type_ids` through this param. `type_ids` should be specified as a
@@ -169,7 +170,7 @@ example
 /lanerestrictions/api/lanerestrictions?type=RoadClosure&type_ids=[123,124,125]
 ```
 
-#### has_restrictions
+### has_restrictions
 
 Specifies that only lane restriction records that have either speed limits in
 place or lanes closed in 1 or both directions should be returned. You will
