@@ -68,12 +68,12 @@ class ApiUtils {
 
             $polyline = array(
                 array(
-                    (double)$laneRestriction['osm_node_a_lat'],
                     (double)$laneRestriction['osm_node_a_lng'],
+                    (double)$laneRestriction['osm_node_a_lat'],
                 ),
                 array(
-                    (double)$laneRestriction['osm_node_b_lat'],
                     (double)$laneRestriction['osm_node_b_lng'],
+                    (double)$laneRestriction['osm_node_b_lat'],
                 ),
             );
 
