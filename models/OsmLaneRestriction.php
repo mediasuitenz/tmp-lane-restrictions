@@ -353,9 +353,9 @@ class OsmLaneRestriction extends CActiveRecord
 
         foreach ($latLngs as $latLng) {
 
-            $lat = $p->purify($latLng['lat']);
-            $lng = $p->purify($latLng['lng']);
-            $distance = $p->purify($distance);
+            $lat = (double)$p->purify($latLng['lat']);
+            $lng = (double)$p->purify($latLng['lng']);
+            $distance = (double)$p->purify($distance);
 
             list($tr, $br, $bl, $tl)
                 = GeoUtils::boundingRectangle($lat, $lng, $distance);
@@ -437,11 +437,11 @@ class OsmLaneRestriction extends CActiveRecord
     }
 
     private function getLatLngFromNodeId($osmNodeId) {
-        $osm = new OpenStreetMap('http://www.openstreetmap.org/api', 0.6);
+        $osm = new OpenStreetMap('api.openstreetmap.org/api', 0.6);
         $node = $osm->getNode($osmNodeId);
         $nodeAttrs = $node['node']['@attributes'];
-        $lat = $nodeAttrs['lat'];
-        $lng = $nodeAttrs['lon'];
+        $lat = (double)$nodeAttrs['lat'];
+        $lng = (double)$nodeAttrs['lon'];
         return array('lat' => $lat, 'lng' => $lng);
     }
 

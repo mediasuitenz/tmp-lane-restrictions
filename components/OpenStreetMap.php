@@ -36,16 +36,20 @@ class OpenStreetMap
             $params[] = $key . '=' . $value;
         }
 
-        $uri .= '?' . implode('&', $params);
+        $paramString = implode('&', $params);
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-          CURLOPT_RETURNTRANSFER => 1,
-          CURLOPT_URL => $uri
-        ));
-        $response = curl_exec($curl);
+        if (false === empty($paramString)) {
+            $uri .= '?' . implode('&', $params);
+        }
 
-        $xml = simplexml_load_string($response);
+        $request = new \jyggen\Curl\Request($uri);
+        $request->execute();
+        $response = $request->getResponse();
+
+        $body = $response->getContent();
+        $status = $response->getStatusCode();
+
+        $xml = simplexml_load_string($body);
         $json = json_encode($xml);
 
         return json_decode($json,TRUE);
