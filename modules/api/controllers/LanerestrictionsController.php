@@ -54,9 +54,12 @@ class LanerestrictionsController extends Controller {
             $offset          = $request->params('offset');
             $startsAt        = $request->params('starts_at');
             $endsAt          = $request->params('ends_at');
-            $latlng          = $request->params('nearby');
+            $latlng          = $request->params('nearby_lat_lng');
+            $latlngs         = $request->params('nearby_lat_lngs');
             $distance        = $request->params('distance');
             $format          = $request->params('format');
+            $nearbyNodeId    = $request->params('nearby_node_id');
+            $nearbyNodeIds   = $request->params('nearby_node_ids');
 
             $startsAt = str_replace(' ', '+', $startsAt);
             $endsAt = str_replace(' ', '+', $endsAt);
@@ -67,15 +70,19 @@ class LanerestrictionsController extends Controller {
             $msg = ApiUtils::checkNodeParams($msg, $nodeId, $nodeIds);
             $msg = ApiUtils::checkPathParams($msg, $path, $paths);
             $msg = ApiUtils::checkDateTimeParams($msg, $startsAt, $endsAt);
-            $msg = ApiUtils::checkGeoParams($msg, $latlng, $distance);
+            $msg = ApiUtils::checkNearbyParams($msg, $latlng);
+            $msg = ApiUtils::checkNearbyNodeIdsParams($msg, $nearbyNodeIds);
             if ($msg) {
                 ApiUtils::jsonError($app, 400, $msg);
             }
 
-            $latlng = explode(',', $latlng);
-            $lat = empty($latlng[0]) ? null : $latlng[0];
-            $lng = empty($latlng[1]) ? null : $latlng[1];
+            //process lat lngs into correct format for nearby scope
+            $latlngs = json_decode($latlngs);
 
+            //process single lat lng
+            $latlng = explode(',', $latlng);
+            $lat = empty($latlng[0]) ? null : (double)$latlng[0];
+            $lng = empty($latlng[1]) ? null : (double)$latlng[1];
 
             //Fetch lane restriction objects
             $laneRestrictions = OsmLaneRestriction::model()
@@ -91,7 +98,10 @@ class LanerestrictionsController extends Controller {
                 ->offset($offset)
                 ->startsAt($startsAt)
                 ->endsAt($endsAt)
-                ->nearby($lat, $lng, $distance)
+                ->nearbyLatLng($lat, $lng, $distance)
+                ->nearbyLatLngs($latlngs, $distance)
+                ->nearbyNodeId($nearbyNodeId, $distance)
+                ->nearbyNodeIds(json_decode($nearbyNodeIds, true), $distance)
                 ->findAll();
 
             //run the collection through array map to convert objects
