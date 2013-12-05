@@ -38,6 +38,16 @@ class GeoUtils {
         return $coord;
 
     }
+
+    public static function boundingRectangle($lat, $lng, $distance) {
+        return array (
+            GeoUtils::dueCoords($lat, $lng, 45, $distance),
+            GeoUtils::dueCoords($lat, $lng, 135, $distance),
+            GeoUtils::dueCoords($lat, $lng, 225, $distance),
+            GeoUtils::dueCoords($lat, $lng, 315, $distance),
+        );
+    }
+
 }
 
 
