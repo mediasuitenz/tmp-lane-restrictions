@@ -220,7 +220,7 @@ or
 /lanerestrictions?has_restrictions=1
 ```
 
-### nearby
+### nearby_lat_lng
 
 Specifies that only known lane restriction paths nearby to given latitudinal
 and longitudinal coordinates should be returned. Nearby by default means within
@@ -231,15 +231,67 @@ Default: null
 
 example
 ```
-/lanerestrictions?nearby=-43.241886,173.285909
+/lanerestrictions?nearby_lat_lng=-43.241886,173.285909
+```
+
+### nearby_lat_lngs
+
+Specifies that only known lane restriction paths nearby to given latitudinal
+and longitudinal coordinates should be returned. Nearby by default means within
+roughly 1km from the specified latlng but this can be overridden using the
+`distance` parameter.
+nearby_lat_lngs takes an array of latlng coords eg. `[[-43.241886,173.285909],[-43.241886,173.285909]]`
+and will return any restrictions near to each of the given latlng points.
+
+Default: null
+
+example
+```
+/lanerestrictions?nearby_lat_lngs=[[-43.241886,173.285909],[-43.241886,173.285909]]
+```
+
+### nearby_node_id
+
+Specifies that only known lane restriction paths nearby to given open street maps
+node id should be returned. Nearby by default means within
+roughly 1km from the specified latlng but this can be overridden using the
+`distance` parameter.
+Note: Using this method is slower than using the `nearby_lat_lng` parameter as
+it requires doing a lookup through the open street maps API to get the lat and lng
+coordinates for the given node id. If possible you should prefer to use `nearby_lat_lng`
+instead of `nearby_node_id`
+
+Default: null
+
+example
+```
+/lanerestrictions?nearby_node_id=1172376225
+```
+
+### nearby_node_ids
+
+Specifies that only known lane restriction paths nearby to given open street maps
+node ids (as an array) should be returned. Nearby by default means within
+roughly 1km from the specified latlng but this can be overridden using the
+`distance` parameter.
+Note: Using this method is slower than using the `nearby_lat_lngs` parameter as
+it requires doing a lookup through the open street maps API to get the lat and lng
+coordinates for the given node id. If possible you should prefer to use `nearby_lat_lngs`
+instead of `nearby_node_ids`
+
+Default: null
+
+example
+```
+/lanerestrictions?nearby_node_ids=[1172376225,1172376226,1172376227]
 ```
 
 ### distance
 
-Specifies the distance that should be considered `nearby`. Specifying this param
-without specifying `nearby` will throw an error.
+Specifies the distance that should be considered `nearby`.
+This parameter should be specified in meters
 
-Default: 1 (only if nearby param is set, otherwise null)
+Default: 1000 (only if nearby param is set, otherwise null)
 
 example
 ```
