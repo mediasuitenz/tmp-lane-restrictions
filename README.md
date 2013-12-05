@@ -12,7 +12,7 @@ API for fetching and creating lane restriction data.
 ## Endpoints
 
 ```
-/lanerestrictions/api/lanerestrictions
+/lanerestrictions
 ```
 
 ## Example returned data
@@ -53,7 +53,7 @@ Default: 20
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?limit=2
+/lanerestrictions?limit=2
 ```
 
 ### offset
@@ -64,7 +64,7 @@ Default: 0
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?offset=4
+/lanerestrictions?offset=4
 ```
 
 ### starts_at
@@ -77,7 +77,7 @@ Default: the current ISO8601 date/time
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00Z&ends_at=2013-10-03T09:30:00Z
+/lanerestrictions?starts_at=2013-10-01T10:00:00Z&ends_at=2013-10-03T09:30:00Z
 ```
 
 ### ends_at
@@ -90,7 +90,7 @@ Default: 2 weeks from the current ISO8601 date/time
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?starts_at=2013-10-01T10:00:00Z&ends_at=2013-10-03T09:30:00Z
+/lanerestrictions?starts_at=2013-10-01T10:00:00Z&ends_at=2013-10-03T09:30:00Z
 ```
 
 ### node_id
@@ -102,7 +102,7 @@ Default: null
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?node_id=12312341
+/lanerestrictions?node_id=12312341
 ```
 
 ### node_ids
@@ -115,7 +115,7 @@ Default: null
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?node_ids=[12312341,12345678]
+/lanerestrictions?node_ids=[12312341,12345678]
 ```
 
 ### path
@@ -133,7 +133,7 @@ Default: null
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?path=[12312341,12345678]
+/lanerestrictions?path=[12312341,12345678]
 ```
 
 ### path_ids
@@ -148,7 +148,7 @@ Default: null
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?path=[[12122341,12455678],[12312341,12345678],[12982341,12340478]]
+/lanerestrictions?path=[[12122341,12455678],[12312341,12345678],[12982341,12340478]]
 ```
 
 ### type
@@ -161,11 +161,11 @@ Default: all types
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?type=RoadClosure
+/lanerestrictions?type=RoadClosure
 ```
 or
 ```
-/lanerestrictions/api/lanerestrictions?type=TrafficManagementPlan
+/lanerestrictions?type=TrafficManagementPlan
 ```
 
 ### type_id
@@ -181,7 +181,7 @@ Default: null
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?type=RoadClosure&type_id=123
+/lanerestrictions?type=RoadClosure&type_id=123
 ```
 
 ### type_ids
@@ -195,7 +195,7 @@ Default: null
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?type=RoadClosure&type_ids=[123,124,125]
+/lanerestrictions?type=RoadClosure&type_ids=[123,124,125]
 ```
 
 ### has_restrictions
@@ -213,11 +213,11 @@ values they have
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?has_restrictions=true
+/lanerestrictions?has_restrictions=true
 ```
 or
 ```
-/lanerestrictions/api/lanerestrictions?has_restrictions=1
+/lanerestrictions?has_restrictions=1
 ```
 
 ### nearby
@@ -231,7 +231,7 @@ Default: null
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?nearby=-43.241886,173.285909
+/lanerestrictions?nearby=-43.241886,173.285909
 ```
 
 ### distance
@@ -243,7 +243,7 @@ Default: 1 (only if nearby param is set, otherwise null)
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?nearby=-43.241886,173.285909&distance=10
+/lanerestrictions?nearby=-43.241886,173.285909&distance=10
 ```
 
 ### format
@@ -255,5 +255,5 @@ Default: json
 
 example
 ```
-/lanerestrictions/api/lanerestrictions?format=geojson
+/lanerestrictions?format=geojson
 ```
