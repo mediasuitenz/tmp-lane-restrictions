@@ -9,11 +9,13 @@ class GeoUtils {
      * @param  float   $lng      - longitudinal coord
      * @param  integer $bearing  - direction, possibile values are 0-360 where
      *                             0 = north, 90 = east, 180 = south, 270 = west
-     * @param  float   $distance - in km away from the originating latlng
+     * @param  float   $distance - in m away from the originating latlng
      *
      * @return array             - array of lat and lng
      */
     public static function dueCoords($lat, $lng, $bearing, $distance) {
+
+        $distance = $distance / 1000;
 
         $radius = 6378.1;
 
