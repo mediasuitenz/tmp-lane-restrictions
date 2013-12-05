@@ -20,6 +20,7 @@ class ApiUtils {
     const LAT_LNG_NOT_SET = 'because distance param is set, nearby param must also be set';
     const DISTANCE_NOT_SET = 'because nearby param is set, distance param must also be set';
     const LAT_LNG_INVALID = 'nearby must be a comma separated coord string eg. nearby=123.123,-34.345';
+    const NEARBY_NODE_IDS_NOT_ARRAY = 'nearby_node_ids must be an array of node ids eg. nearby_node_ids=[123123,123124]';
 
     /**
      * Creates a Slim api app
@@ -176,8 +177,8 @@ class ApiUtils {
         return $msg;
     }
 
-    public static function checkGeoParams($msg, $latlng, $distance) {
-        if (empty($latlng) && empty($distance)) {
+    public static function checkNearbyParams($msg, $latlng) {
+        if (empty($latlng)) {
             return $msg;
         }
         $latlngArray = explode(',', $latlng);
@@ -187,8 +188,16 @@ class ApiUtils {
         if (false === strpos($latlng, ',')) {
             $msg = self::LAT_LNG_INVALID;
         }
-        if (empty($latlng) && false === empty($distance)) {
-            $msg = self::LAT_LNG_NOT_SET;
+        return $msg;
+    }
+
+    public static function checkNearbyNodeIdsParams($msg, $nearbyNodeIds) {
+        if (empty($nearbyNodeIds)) {
+            return $msg;
+        }
+        $nearbyNodeIds = json_decode($nearbyNodeIds, true);
+        if (false === is_array($nearbyNodeIds)) {
+            $msg = self::NEARBY_NODE_IDS_NOT_ARRAY;
         }
         return $msg;
     }
