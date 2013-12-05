@@ -346,34 +346,107 @@ class OsmLaneRestriction extends CActiveRecord
         return $this;
     }
 
-    public function nearby($lat = null, $lng = null, $distance = 1) {
-        if (empty($lat) || empty($lat)) {
-            return $this;
-        }
+    private function nearby($latLngs = array(), $distance = 1000) {
 
         $p = new CHtmlPurifier();
-        $lat = $p->purify($lat);
-        $lng = $p->purify($lng);
-        $distance = $p->purify($distance);
-
-        $topRight = GeoUtils::dueCoords($lat, $lng, 45, $distance);
-        $bottomRight = GeoUtils::dueCoords($lat, $lng, 135, $distance);
-        $bottomLeft = GeoUtils::dueCoords($lat, $lng, 225, $distance);
-        $topLeft = GeoUtils::dueCoords($lat, $lng, 315, $distance);
-
-        $tr = "{$topRight['lat']} {$topRight['lng']}";
-        $br = "{$bottomRight['lat']} {$bottomRight['lng']}";
-        $bl = "{$bottomLeft['lat']} {$bottomLeft['lng']}";
-        $tl = "{$topLeft['lat']} {$topLeft['lng']}";
-
-        $boundingRectangle = "POLYGON(({$tl},{$tr},{$br},{$bl},{$tl}))";
-        $boundingGeometry = "PolygonFromText('{$boundingRectangle}')";
-
         $criteria = new CDbCriteria;
-        $criteria->addCondition("MBRContains($boundingGeometry, mysql_geometric_path)");
-        $criteria->addCondition("MBRIntersects($boundingGeometry, mysql_geometric_path)", 'OR');
+
+        foreach ($latLngs as $latLng) {
+
+            $lat = $p->purify($latLng['lat']);
+            $lng = $p->purify($latLng['lng']);
+            $distance = $p->purify($distance);
+
+            list($tr, $br, $bl, $tl)
+                = GeoUtils::boundingRectangle($lat, $lng, $distance);
+
+            $tr = "{$tr['lat']} {$tr['lng']}";
+            $br = "{$br['lat']} {$br['lng']}";
+            $bl = "{$bl['lat']} {$bl['lng']}";
+            $tl = "{$tl['lat']} {$tl['lng']}";
+
+            $boundingRectangle = "POLYGON(({$tl},{$tr},{$br},{$bl},{$tl}))";
+            $boundingGeometry = "PolygonFromText('{$boundingRectangle}')";
+
+            $subCriteria = new CDbCriteria;
+            $subCriteria->addCondition(
+                "MBRContains($boundingGeometry, mysql_geometric_path)"
+            );
+            $subCriteria->addCondition(
+                "MBRIntersects($boundingGeometry, mysql_geometric_path)", 'OR'
+            );
+            $criteria->mergeWith($subCriteria, 'OR');
+        }
+
+        return $criteria;
+    }
+
+    public function nearbyLatLng($lat, $lng, $distance = 1000) {
+        if (empty($lat) || empty($lng)) {
+            return $this;
+        }
+        if (false === empty($lat) && false === empty($lng)) {
+            $nearbyLatLng = array(array('lat' => $lat, 'lng' => $lng));
+        }
+        $criteria = $this->nearby($nearbyLatLng, $distance);
         $this->getDbCriteria()->mergeWith($criteria);
         return $this;
+    }
+
+    public function nearbyLatLngs(array $latLngs = null, $distance = 1000) {
+        if (empty($latLngs)) {
+            return $this;
+        }
+        $nearbyLatLngs = array();
+        foreach ($latLngs as $latLng) {
+            if (empty($latLng)) {
+                continue;
+            }
+            $nearbyLatLngs[] = array(
+                'lat' => (double)$latLng[0],
+                'lng' => (double)$latLng[1],
+            );
+        }
+        $criteria = $this->nearby($nearbyLatLngs, $distance);
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    public function nearbyNodeId($osmNodeId = null, $distance = 1) {
+        if (empty($osmNodeId)) {
+            return $this;
+        }
+        $latLng = $this->getLatLngFromNodeId($osmNodeId);
+        $criteria = $this->addNearbyNodeIdFilter(array($latLng), $distance);
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    public function nearbyNodeIds($osmNodeIds = array(), $distance = 1) {
+        if (empty($osmNodeIds)) {
+            return $this;
+        }
+        $osmNodeIdArr = array();
+        foreach ($osmNodeIds as $osmNodeId) {
+            $latLngs = $this->getLatLngFromNodeId($osmNodeId);
+            $osmNodeIdArr[] = $latLngs;
+        }
+        $criteria = $this->addNearbyNodeIdFilter($osmNodeIdArr, $distance);
+        $this->getDbCriteria()->mergeWith($criteria);
+        return $this;
+    }
+
+    private function getLatLngFromNodeId($osmNodeId) {
+        $osm = new OpenStreetMap('http://www.openstreetmap.org/api', 0.6);
+        $node = $osm->getNode($osmNodeId);
+        $nodeAttrs = $node['node']['@attributes'];
+        $lat = $nodeAttrs['lat'];
+        $lng = $nodeAttrs['lon'];
+        return array('lat' => $lat, 'lng' => $lng);
+    }
+
+    private function addNearbyNodeIdFilter(array $latLngs, $distance) {
+        return $this->nearby($latLngs, $distance);
     }
 
 }
